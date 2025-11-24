@@ -1,4 +1,4 @@
-import React, { useState, useEffect, useRef } from 'react';
+import { useState, useEffect, useRef } from 'react';
 import { Play, Pause, RotateCcw, AlignLeft, AlignCenter, AlignRight, Maximize, Minimize } from 'lucide-react';
 import './index.css';
 
@@ -9,10 +9,10 @@ export default function Teleprompter() {
   const [fontSize, setFontSize] = useState(32);
   const [activeSentence, setActiveSentence] = useState(0);
   const [adhdMode, setAdhdMode] = useState(false);
-  const [textAlign, setTextAlign] = useState('left');
+  const [textAlign, setTextAlign] = useState<'left' | 'center' | 'right'>('left');
   const [isFullscreen, setIsFullscreen] = useState(false);
-  const containerRef = useRef(null);
-  const sentenceRefs = useRef([]);
+  const containerRef = useRef<HTMLDivElement | null>(null);
+  const sentenceRefs = useRef<(HTMLDivElement | null)[]>([]);
 
   const sentences = text.split('\n').filter(s => s.trim());
 
@@ -30,7 +30,7 @@ export default function Teleprompter() {
     }, 3000 / speed);
 
     return () => clearInterval(interval);
-  }, [isPlaying, speed, sentences.length]);
+}, [isPlaying, speed, sentences.length]);
 
   useEffect(() => {
     if (sentenceRefs.current[activeSentence] && containerRef.current) {
@@ -187,7 +187,7 @@ export default function Teleprompter() {
               {sentences.map((sentence, index) => (
                 <div
                   key={index}
-                  ref={el => sentenceRefs.current[index] = el}
+                  ref={el => { sentenceRefs.current[index] = el; }}
                   className="transition-opacity duration-500 mb-8"
                   style={{
                     fontSize: `${fontSize}px`,
